@@ -112,12 +112,12 @@ class Acknowledgment(threading.Thread):
             while packet_ack < total_packets:
                 acknowledgement, address = self.socket_client.recvfrom(2048)
                 ack_number = ack_number+1
+                packet_ack  = packet_ack + 1
                 seq_number = struct.unpack('=I', acknowledgement[0:4])
                 seq_number = int(seq_number[0])
                 acknowledgement_check = struct.unpack('=H', acknowledgement[6:8])
                 if acknowledgement_check[0] == DATA_PACKET_IDENTIFIER:
                     lock.acquire()
-                    packet_ack  = packet_ack + 1
                     del sending_array[seq_number-1]
                     lock.release()
 
