@@ -59,6 +59,8 @@ def server_receiver():
         else:
             if expected_sequence > seq_num[0]:
                 expected_sequence = seq_num[0]
+            if expected_sequence+1 == seq_num[0]:
+                expected_sequence = seq_num[0]
             if expected_sequence == seq_num[0]:
                 if checksum[0] == checksum_computation(data):
                     receive_and_process_input(file_name, data, expected_sequence, data_packet_acknowledgment, soc_receiver, checksum, address)
