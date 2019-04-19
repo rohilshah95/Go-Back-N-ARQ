@@ -57,9 +57,10 @@ def server_receiver():
         if(random.random()<probability):
             print('PACKET LOSS,SEQUENCE NUMBER = '+ str(seq_num[0]))
         else:
+            print("Expecting:%s, got  %s" %(expected_sequence, seq_num[0]))
             if expected_sequence > seq_num[0]:
                 expected_sequence = seq_num[0]
-            if expected_sequence+1 == seq_num[0]:
+            if expected_sequence < seq_num[0]:
                 expected_sequence = seq_num[0]
             if expected_sequence == seq_num[0]:
                 if checksum[0] == checksum_computation(data):
