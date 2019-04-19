@@ -65,9 +65,9 @@ def server_receiver():
                 if checksum[0] == checksum_computation(data):
                     receive_and_process_input(file_name, data, expected_sequence, data_packet_acknowledgment, soc_receiver, checksum, address)
                     expected_sequence += 1   
-        if seq_num[0] == max_seq[0]-1:
-            print("Server Reset")
-            expected_sequence=1
+        # if seq_num[0] == max_seq[0]-1:
+        #     print("Server Reset")
+        #     expected_sequence=1
 
 def carry_around_add(x, y):
     return ((x + y) & 0xffff) + ((x + y) >> 16)

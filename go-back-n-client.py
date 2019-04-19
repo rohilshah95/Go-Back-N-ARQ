@@ -155,7 +155,7 @@ def main():
             print("----------------------------------------")    
             print("MSS = %s, Try = %s" %(MSS_val, i))                    
             print("----------------------------------------")
-            ack_number = 0
+            # ack_number = 0
             Client_IP = ''
             Client_Port = 4443
             socket_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
