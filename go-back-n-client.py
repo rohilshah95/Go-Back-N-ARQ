@@ -8,6 +8,7 @@ import threading
 
 TIMEOUT_TIMER = 3
 DATA_PACKET_IDENTIFIER = 21845
+ACK_PACKET_IDENTIFIER = 43690
 ack_number = 0
 last_seq_number = 0
 data_to_send = []
@@ -116,7 +117,7 @@ class Acknowledgment(threading.Thread):
                 seq_number = struct.unpack('=I', acknowledgement[0:4])
                 seq_number = int(seq_number[0])
                 acknowledgement_check = struct.unpack('=H', acknowledgement[6:8])
-                if acknowledgement_check[0] == DATA_PACKET_IDENTIFIER:
+                if acknowledgement_check[0] == ACK_PACKET_IDENTIFIER:
                     lock.acquire()
                     del sending_array[seq_number-1]
                     lock.release()
