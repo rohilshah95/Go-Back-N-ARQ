@@ -162,12 +162,12 @@ def main():
             socket_client.bind((Client_IP,Client_Port))
             FILE = open(file,'rb')
             FILE_COPY = open(file, 'rb')
-            data = FILE.read(MSS)
-            data_copy = FILE_COPY.read(MSS)
+            data = FILE.read(MSS_val)
+            data_copy = FILE_COPY.read(MSS_val)
             seq = 1
             while data_copy:
                 seq+=1
-                data_copy = FILE_COPY.read(MSS)
+                data_copy = FILE_COPY.read(MSS_val)
             sequence_number = 1
             while data:
                 file_content = str(data,'UTF-8',errors='replace')
@@ -179,7 +179,7 @@ def main():
                 max_seq = struct.pack('=L',seq)
                 packet = seq_number + checksum + data_packet + max_seq + data_sent
                 data_to_send.append(packet)
-                data = FILE.read(MSS)
+                data = FILE.read(MSS_val)
                 sequence_number += 1
             total_packets = len(data_to_send)
             ACKs = Acknowledgment(socket_client)
