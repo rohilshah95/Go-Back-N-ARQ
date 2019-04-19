@@ -57,10 +57,12 @@ def server_receiver():
         if(random.random()<probability):
             print('PACKET LOSS,SEQUENCE NUMBER = '+ str(seq_num[0]))
         else:
+            if expected_sequence > seq_num[0]:
+                expected_sequence = seq_num[0]
             if expected_sequence == seq_num[0]:
                 if checksum[0] == checksum_computation(data):
                     receive_and_process_input(file_name, data, expected_sequence, data_packet_acknowledgment, soc_receiver, checksum, address)
-                    expected_sequence += 1
+                    expected_sequence += 1   
         if seq_num[0] == max_seq[0]-1:
             print("Server Reset")
             expected_sequence=1
