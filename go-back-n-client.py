@@ -146,61 +146,108 @@ def main():
     global data_to_send
     global total_packets
     global ack_number
-    new_N = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+
+    Client_IP = ''
+    Client_Port = 4443
+    socket_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    socket_client.bind((Client_IP,Client_Port))
+    FILE = open(file,'rb')
+    FILE_COPY = open(file, 'rb')
+    data = FILE.read(MSS)
+    data_copy = FILE_COPY.read(MSS)
+    seq = 1
+    while data_copy:
+        seq+=1
+        data_copy = FILE_COPY.read(MSS)
+    sequence_number = 1
+    while data:
+        file_content = str(data,'UTF-8',errors='replace')
+        checksum = checksum_computation(file_content)
+        checksum = struct.pack('=H', checksum)
+        seq_number = struct.pack('=L',sequence_number)
+        data_sent = file_content.encode('ISO-8859-1','ignore')
+        data_packet = struct.pack('=h',DATA_PACKET_IDENTIFIER)
+        max_seq = struct.pack('=L',seq)
+        packet = seq_number + checksum + data_packet + max_seq + data_sent
+        data_to_send.append(packet)
+        data = FILE.read(MSS)
+        sequence_number += 1
+    total_packets = len(data_to_send)
+    ACKs = Acknowledgment(socket_client)
+
+
+    # Task 1
     
-    new_MSS = [100,200,300,400,500,600,700,800,900,1000]
-    for MSS_val in new_MSS:
-    # for N_val in new_N:
-        for i in range(5):
-            print("----------------------------------------")    
-            print("MSS = %s, Try = %s" %(MSS_val, i))                    
-            print("----------------------------------------")
-            # ack_number = 0
-            Client_IP = ''
-            Client_Port = 4443
-            socket_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            socket_client.bind((Client_IP,Client_Port))
-            FILE = open(file,'rb')
-            FILE_COPY = open(file, 'rb')
-            data = FILE.read(MSS_val)
-            data_copy = FILE_COPY.read(MSS_val)
-            seq = 1
-            while data_copy:
-                seq+=1
-                data_copy = FILE_COPY.read(MSS_val)
-            sequence_number = 1
-            while data:
-                file_content = str(data,'UTF-8',errors='replace')
-                checksum = checksum_computation(file_content)
-                checksum = struct.pack('=H', checksum)
-                seq_number = struct.pack('=L',sequence_number)
-                data_sent = file_content.encode('ISO-8859-1','ignore')
-                data_packet = struct.pack('=h',DATA_PACKET_IDENTIFIER)
-                max_seq = struct.pack('=L',seq)
-                packet = seq_number + checksum + data_packet + max_seq + data_sent
-                data_to_send.append(packet)
-                data = FILE.read(MSS_val)
-                sequence_number += 1
-            total_packets = len(data_to_send)
-            ACKs = Acknowledgment(socket_client)
+    # transmitted_data = Sender(host, port, file, N, MSS_val, socket_client)
+    transmitted_data = Sender(host, port, file, N, MSS, socket_client)
+    transmitted_data.join()
+    ACKs.join()
+    end = time.time()
+    server = (host,port)
+    socket_client.close()
+    print('Host:\t'+str(host))
+    print('Port:\t'+str(port))
+    print('Window Size:\t'+ str(N))
+    print('Maximum Segment Size:\t'+str(MSS))
+    print('End Time\t'+str(end))
+    print('Total Time\t'+str(end-start))
+    FILE.close() 
+
+    # new_N = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+    
+    # new_MSS = [100,200,300,400,500,600,700,800,900,1000]
+    # for MSS_val in new_MSS:
+    # # for N_val in new_N:
+    #     for i in range(5):
+    #         print("----------------------------------------")    
+    #         print("MSS = %s, Try = %s" %(MSS_val, i))                    
+    #         print("----------------------------------------")
+    #         # ack_number = 0
+    #         Client_IP = ''
+    #         Client_Port = 4443
+    #         socket_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    #         socket_client.bind((Client_IP,Client_Port))
+    #         FILE = open(file,'rb')
+    #         FILE_COPY = open(file, 'rb')
+    #         data = FILE.read(MSS_val)
+    #         data_copy = FILE_COPY.read(MSS_val)
+    #         seq = 1
+    #         while data_copy:
+    #             seq+=1
+    #             data_copy = FILE_COPY.read(MSS_val)
+    #         sequence_number = 1
+    #         while data:
+    #             file_content = str(data,'UTF-8',errors='replace')
+    #             checksum = checksum_computation(file_content)
+    #             checksum = struct.pack('=H', checksum)
+    #             seq_number = struct.pack('=L',sequence_number)
+    #             data_sent = file_content.encode('ISO-8859-1','ignore')
+    #             data_packet = struct.pack('=h',DATA_PACKET_IDENTIFIER)
+    #             max_seq = struct.pack('=L',seq)
+    #             packet = seq_number + checksum + data_packet + max_seq + data_sent
+    #             data_to_send.append(packet)
+    #             data = FILE.read(MSS_val)
+    #             sequence_number += 1
+    #         total_packets = len(data_to_send)
+    #         ACKs = Acknowledgment(socket_client)
 
 
-            # Task 1
+    #         # Task 1
             
-            transmitted_data = Sender(host, port, file, N, MSS_val, socket_client)
-            # transmitted_data = Sender(host, port, file, N, MSS, socket_client)
-            transmitted_data.join()
-            ACKs.join()
-            end = time.time()
-            server = (host,port)
-            socket_client.close()
-            print('Host:\t'+str(host))
-            print('Port:\t'+str(port))
-            print('Window Size:\t'+ str(N))
-            print('Maximum Segment Size:\t'+str(MSS))
-            print('End Time\t'+str(end))
-            print('Total Time\t'+str(end-start))
-            FILE.close() 
+    #         transmitted_data = Sender(host, port, file, N, MSS_val, socket_client)
+    #         # transmitted_data = Sender(host, port, file, N, MSS, socket_client)
+    #         transmitted_data.join()
+    #         ACKs.join()
+    #         end = time.time()
+    #         server = (host,port)
+    #         socket_client.close()
+    #         print('Host:\t'+str(host))
+    #         print('Port:\t'+str(port))
+    #         print('Window Size:\t'+ str(N))
+    #         print('Maximum Segment Size:\t'+str(MSS))
+    #         print('End Time\t'+str(end))
+    #         print('Total Time\t'+str(end-start))
+    #         FILE.close() 
 
 if __name__ == '__main__':
     main()
