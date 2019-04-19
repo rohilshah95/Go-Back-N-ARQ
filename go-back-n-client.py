@@ -147,7 +147,7 @@ def main():
     global total_packets
     global ack_number
 
-    for i in range(5):
+    for i in range(1):
         print("----------------------------------------")    
         print("Try = %s" %(i))                    
         print("----------------------------------------")
@@ -183,19 +183,19 @@ def main():
     # Task 1
     
     # transmitted_data = Sender(host, port, file, N, MSS_val, socket_client)
-    transmitted_data = Sender(host, port, file, N, MSS, socket_client)
-    transmitted_data.join()
-    ACKs.join()
-    end = time.time()
-    server = (host,port)
-    socket_client.close()
-    print('Host:\t'+str(host))
-    print('Port:\t'+str(port))
-    print('Window Size:\t'+ str(N))
-    print('Maximum Segment Size:\t'+str(MSS))
-    print('End Time\t'+str(end))
-    print('Total Time\t'+str(end-start))
-    FILE.close() 
+        transmitted_data = Sender(host, port, file, N, MSS, socket_client)
+        transmitted_data.join()
+        ACKs.join()
+        end = time.time()
+        server = (host,port)
+        socket_client.close()
+        print('Host:\t'+str(host))
+        print('Port:\t'+str(port))
+        print('Window Size:\t'+ str(N))
+        print('Maximum Segment Size:\t'+str(MSS))
+        print('End Time\t'+str(end))
+        print('Total Time\t'+str(end-start))
+        FILE.close() 
 
     # new_N = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
     
