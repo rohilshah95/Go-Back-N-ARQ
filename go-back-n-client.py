@@ -180,10 +180,9 @@ def rdt_send():
     global total_packets
     global ack_number
 
-    Client_IP = ''
-    Client_Port = 4443
+    client_port = 4443
     socket_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    socket_client.bind((Client_IP,Client_Port))
+    socket_client.bind(('', client_port))
     FILE = open(file,'rb')
     FILE_COPY = open(file, 'rb')
     data = FILE.read(MSS)
