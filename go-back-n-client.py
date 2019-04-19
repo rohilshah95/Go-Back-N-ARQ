@@ -147,33 +147,37 @@ def main():
     global total_packets
     global ack_number
 
-    Client_IP = ''
-    Client_Port = 4443
-    socket_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    socket_client.bind((Client_IP,Client_Port))
-    FILE = open(file,'rb')
-    FILE_COPY = open(file, 'rb')
-    data = FILE.read(MSS)
-    data_copy = FILE_COPY.read(MSS)
-    seq = 1
-    while data_copy:
-        seq+=1
-        data_copy = FILE_COPY.read(MSS)
-    sequence_number = 1
-    while data:
-        file_content = str(data,'UTF-8',errors='replace')
-        checksum = checksum_computation(file_content)
-        checksum = struct.pack('=H', checksum)
-        seq_number = struct.pack('=L',sequence_number)
-        data_sent = file_content.encode('ISO-8859-1','ignore')
-        data_packet = struct.pack('=h',DATA_PACKET_IDENTIFIER)
-        max_seq = struct.pack('=L',seq)
-        packet = seq_number + checksum + data_packet + max_seq + data_sent
-        data_to_send.append(packet)
+    for i in range(5):
+        print("----------------------------------------")    
+        print("Try = %s" %(i))                    
+        print("----------------------------------------")
+        Client_IP = ''
+        Client_Port = 4443
+        socket_client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        socket_client.bind((Client_IP,Client_Port))
+        FILE = open(file,'rb')
+        FILE_COPY = open(file, 'rb')
         data = FILE.read(MSS)
-        sequence_number += 1
-    total_packets = len(data_to_send)
-    ACKs = Acknowledgment(socket_client)
+        data_copy = FILE_COPY.read(MSS)
+        seq = 1
+        while data_copy:
+            seq+=1
+            data_copy = FILE_COPY.read(MSS)
+        sequence_number = 1
+        while data:
+            file_content = str(data,'UTF-8',errors='replace')
+            checksum = checksum_computation(file_content)
+            checksum = struct.pack('=H', checksum)
+            seq_number = struct.pack('=L',sequence_number)
+            data_sent = file_content.encode('ISO-8859-1','ignore')
+            data_packet = struct.pack('=h',DATA_PACKET_IDENTIFIER)
+            max_seq = struct.pack('=L',seq)
+            packet = seq_number + checksum + data_packet + max_seq + data_sent
+            data_to_send.append(packet)
+            data = FILE.read(MSS)
+            sequence_number += 1
+        total_packets = len(data_to_send)
+        ACKs = Acknowledgment(socket_client)
 
 
     # Task 1
