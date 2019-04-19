@@ -147,11 +147,13 @@ def main():
     global total_packets
     global ack_number
     new_N = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
-
-    for N_val in new_N:
+    
+    new_MSS = [100,200,300,400,500,600,700,800,900,1000]
+    for MSS_val in new_MSS:
+    # for N_val in new_N:
         for i in range(5):
             print("----------------------------------------")    
-            print("N = %s, Try = %s" %(N_val, i))                    
+            print("MSS = %s, Try = %s" %(MSS_val, i))                    
             print("----------------------------------------")
             ack_number = 0
             Client_IP = ''
