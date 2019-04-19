@@ -10,7 +10,6 @@ null_string = 0
 
 def receive_and_process_input(file_name, data, expected_sequence, data_packet_acknowledgment, soc_receiver, checksum, address):
     with open(file_name, 'ab') as file:
-        print("FILE received and size of chunk: " + str(checksum))
         file.write(str.encode(data))
         seq_number = struct.pack('=I', expected_sequence)
         null = struct.pack('=H', null_string)
@@ -28,7 +27,7 @@ def message_from_sender(message):
     max_seq = message[8:12]
     max_seq = struct.unpack('=L', max_seq)
     data = (message[12:])
-    actual_message = data.decode('ISO-8859-1','ignore')
+    actual_message = data.decode('UTF-8','ignore')
     return seq_num, checksum, data_packet_identifier, max_seq, actual_message
 
 def server_receiver():
@@ -51,17 +50,15 @@ def server_receiver():
 
     while True:
         message, address = soc_receiver.recvfrom(2048)
-        print("address"+ str(address))
         seq_num, checksum, data_identifier, max_seq, data = message_from_sender(message)
-        print('seq_num' +str(seq_num))
         if(random.random()<probability):
-            print('PACKET LOSS,SEQUENCE NUMBER = '+ str(seq_num[0]))
+            print('Packet loss, sequence number = '+ str(seq_num[0]))
         else:
-            print("Expecting:%s, got  %s" %(expected_sequence, seq_num[0]))
-            if expected_sequence > seq_num[0]:
-                expected_sequence = seq_num[0]
-            if expected_sequence < seq_num[0]:
-                expected_sequence = seq_num[0]
+            # print("Expecting:%s, got  %s" %(expected_sequence, seq_num[0]))
+            # if expected_sequence > seq_num[0]:
+            #     expected_sequence = seq_num[0]
+            # if expected_sequence < seq_num[0]:
+            #     expected_sequence = seq_num[0]
             if expected_sequence == seq_num[0]:
                 if checksum[0] == checksum_computation(data):
                     receive_and_process_input(file_name, data, expected_sequence, data_packet_acknowledgment, soc_receiver, checksum, address)
