@@ -168,7 +168,7 @@ def output_data(host, port, N, MSS, end, start):
     print('Total Time\t'+str(end-start))
     return
 
-def main():
+def rdt_send():
     host = sys.argv[1]
     port = int(sys.argv[2])
     file = sys.argv[3]
@@ -218,4 +218,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    rdt_send()
