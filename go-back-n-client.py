@@ -187,7 +187,7 @@ def main():
 
             # Task 1
             
-            transmitted_data = Sender(host, port, file, N_val, MSS, socket_client)
+            transmitted_data = Sender(host, port, file, N, MSS_val, socket_client)
             # transmitted_data = Sender(host, port, file, N, MSS, socket_client)
             transmitted_data.join()
             ACKs.join()
