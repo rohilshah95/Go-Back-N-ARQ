@@ -160,13 +160,8 @@ def prepare(file, MSS):
         sequence_number += 1
     return 
 
-def output_data(host, port, N, MSS, end, start):
-    print('Host:\t'+str(host))
-    print('Port:\t'+str(port))
-    print('Window Size:\t'+ str(N))
-    print('Maximum Segment Size:\t'+str(MSS))
-    print('End Time\t'+str(end))
-    print('Total Time\t'+str(end-start))
+def output_data(host, port, N, MSS, endTime, startTime):
+    print('Total Time Taken (Delay):'+str(endTime-startTime))
     return
 
 def rdt_send():
@@ -175,7 +170,7 @@ def rdt_send():
     file = sys.argv[3]
     N = int(sys.argv[4])
     MSS = int(sys.argv[5])
-    start = time.time()
+    startTime = time.time()
     global data_to_send
     global total_packets
     global ack_number
@@ -222,10 +217,10 @@ def rdt_send():
     transmitted_data = Sender(host, port, file, N, MSS, socket_client)
     transmitted_data.join()
     ACKs.join()
-    end = time.time()
+    endTime = time.time()
     server = (host,port)
     socket_client.close()
-    output_data(host, port, N, MSS, end, start)
+    output_data(host, port, N, MSS, endTime, startTime)
 
 
 if __name__ == '__main__':
