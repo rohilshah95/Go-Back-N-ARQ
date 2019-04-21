@@ -206,7 +206,7 @@ def rdt_send():
         data = FILE.read(MSS)
         sequence_number += 1
 
-    file_content = str("0101end0101",'UTF-8',errors='replace')
+    file_content = "0101end0101"
     checksum = checksum_computation(file_content)
     checksum = struct.pack('=H', checksum)
     seq_number = struct.pack('=L',sequence_number)

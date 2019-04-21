@@ -18,6 +18,11 @@ def receive_and_process_input(file_name, data, expected_sequence, data_packet_ac
             acknowledgment = seq_number + null + acknowledgment_sent
             soc_receiver.sendto(acknowledgment, address)
         else:
+            seq_number = struct.pack('=I', expected_sequence)
+            null = struct.pack('=H', null_string)
+            acknowledgment_sent = struct.pack('=H',data_packet_acknowledgment)
+            acknowledgment = seq_number + null + acknowledgment_sent
+            soc_receiver.sendto(acknowledgment, address)
             soc_receiver.close()
             print("Server closed, press ctrl+c")
             exit()
