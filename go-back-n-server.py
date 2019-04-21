@@ -24,7 +24,7 @@ def receive_and_process_input(file_name, data, expected_sequence, data_packet_ac
             acknowledgment = seq_number + null + acknowledgment_sent
             soc_receiver.sendto(acknowledgment, address)
             soc_receiver.close()
-            print("Server closed, press ctrl+c")
+            print("Server closed")
             exit()
 
 def message_from_sender(message):
