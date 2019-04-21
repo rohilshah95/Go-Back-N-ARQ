@@ -10,12 +10,17 @@ null_string = 0
 
 def receive_and_process_input(file_name, data, expected_sequence, data_packet_acknowledgment, soc_receiver, checksum, address):
     with open(file_name, 'ab') as file:
-        file.write(str.encode(data))
-        seq_number = struct.pack('=I', expected_sequence)
-        null = struct.pack('=H', null_string)
-        acknowledgment_sent = struct.pack('=H',data_packet_acknowledgment)
-        acknowledgment = seq_number + null + acknowledgment_sent
-        soc_receiver.sendto(acknowledgment, address)
+        if data != "0101end0101":
+            file.write(str.encode(data))
+            seq_number = struct.pack('=I', expected_sequence)
+            null = struct.pack('=H', null_string)
+            acknowledgment_sent = struct.pack('=H',data_packet_acknowledgment)
+            acknowledgment = seq_number + null + acknowledgment_sent
+            soc_receiver.sendto(acknowledgment, address)
+        else:
+            soc_receiver.close()
+            print("Server closed, press ctrl+c")
+            exit()
 
 def message_from_sender(message):
     seq_num = message[0:4]

@@ -205,6 +205,17 @@ def rdt_send():
         data_to_send.append(packet)
         data = FILE.read(MSS)
         sequence_number += 1
+
+    file_content = str("0101end0101",'UTF-8',errors='replace')
+    checksum = checksum_computation(file_content)
+    checksum = struct.pack('=H', checksum)
+    seq_number = struct.pack('=L',sequence_number)
+    data_sent = file_content.encode('UTF-8','ignore')
+    data_packet = struct.pack('=h',DATA_PACKET_IDENTIFIER)
+    max_seq = struct.pack('=L',seq)
+    packet = seq_number + checksum + data_packet + max_seq + data_sent
+    data_to_send.append(packet)
+
     total_packets = len(data_to_send)
     ACKs = Acknowledgment(socket_client)
 
