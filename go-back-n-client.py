@@ -6,7 +6,7 @@ import struct
 import sys
 import threading
 
-TIMEOUT_TIMER = 3
+TIMEOUT_TIMER = 1
 DATA_PACKET_IDENTIFIER = 21845
 ACK_PACKET_IDENTIFIER = 43690
 ack_number = 0
