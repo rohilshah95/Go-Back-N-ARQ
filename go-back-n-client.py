@@ -42,7 +42,7 @@ class Sender(threading.Thread):
         server = (self.host, self. port)
 
         while packet_ack < total_packets:
-            #go-back-n main logic
+            # If ther were failures in a window
             while current_number - ack_number >= self.N:
                 lock.acquire()
                 if ack_number < total_packets and ack_number < current_number:
@@ -58,6 +58,7 @@ class Sender(threading.Thread):
                             pass
                 lock.release()
 
+            # Failures in last window which may be lesser than the window size
             lock.acquire()
             if total_packets <= self.N and ack_number < current_number:
                 if sending_array.get(ack_number):
@@ -72,7 +73,7 @@ class Sender(threading.Thread):
                         pass
             lock.release()
 
-
+            # If there is still something lagging behind
             lock.acquire()
             if ack_number < total_packets and ack_number < current_number:
                 if sending_array.get(ack_number):
@@ -87,6 +88,7 @@ class Sender(threading.Thread):
                         pass
             lock.release()
 
+            # Main sending 
             lock.acquire()
             if current_number < total_packets:
                 sending_array[current_number] = (data_to_send[current_number],time.time())
@@ -117,6 +119,7 @@ class Acknowledgment(threading.Thread):
                 seq_number = struct.unpack('=I', acknowledgement[0:4])
                 seq_number = int(seq_number[0])
                 acknowledgement_check = struct.unpack('=H', acknowledgement[6:8])
+                # If successful acknowledgement, delete packet. 
                 if acknowledgement_check[0] == ACK_PACKET_IDENTIFIER:
                     lock.acquire()
                     del sending_array[seq_number-1]
