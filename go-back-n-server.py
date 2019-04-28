@@ -4,6 +4,7 @@ import threading
 import pickle
 import struct
 import random
+from common import carry_around_add, checksum_computation
 
 data_packet_acknowledgment = 43690
 null_string = 0
@@ -76,17 +77,6 @@ def server_receiver():
         # if seq_num[0] == max_seq[0]-1:
         #     print("Server Reset")
         #     expected_sequence=1
-
-def carry_around_add(x, y):
-    return ((x + y) & 0xffff) + ((x + y) >> 16)
-
-def checksum_computation(message):
-    add = 0
-    for i in range(0, len(message) - len(message) % 2, 2):
-        message = str(message)
-        w = ord(message[i]) + (ord(message[i + 1]) << 8)
-        add = carry_around_add(add, w)
-    return ~add & 0xffff
 
 if __name__ == '__main__':
     server_receiver()
