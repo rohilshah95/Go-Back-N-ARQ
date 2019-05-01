@@ -62,18 +62,20 @@ def server_receiver():
     while True:
         message, address = soc_receiver.recvfrom(2048)
         seq_num, checksum, data_identifier, max_seq, data = message_from_sender(message)
-        if(random.random()<probability):
-            print('Packet loss, sequence number = '+ str(seq_num[0]))
-        else:
+        # if(random.random()<probability):
+        #     print('Packet loss, sequence number = '+ str(seq_num[0]))
+        # else:
             # print("Expecting:%s, got  %s" %(expected_sequence, seq_num[0]))
             # if expected_sequence > seq_num[0]:
             #     expected_sequence = seq_num[0]
             # if expected_sequence < seq_num[0]:
             #     expected_sequence = seq_num[0]
-            if expected_sequence == seq_num[0]:
-                if checksum[0] == checksum_computation(data):
-                    receive_and_process_input(file_name, data, expected_sequence, data_packet_acknowledgment, soc_receiver, checksum, address)
-                    expected_sequence += 1   
+        if expected_sequence == seq_num[0]:
+            if(random.random()<probability):
+                print('Packet loss, sequence number = '+ str(seq_num[0]))
+            elif checksum[0] == checksum_computation(data):
+                receive_and_process_input(file_name, data, expected_sequence, data_packet_acknowledgment, soc_receiver, checksum, address)
+                expected_sequence += 1   
         # if seq_num[0] == max_seq[0]-1:
         #     print("Server Reset")
         #     expected_sequence=1
